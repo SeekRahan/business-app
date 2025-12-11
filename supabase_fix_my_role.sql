@@ -2,5 +2,5 @@
 UPDATE profiles
 SET role = 'manager', verified = true
 WHERE id IN (
-    SELECT id FROM auth.users WHERE email = 'YOUR_EMAIL_HERE'
+    SELECT id FROM auth.users WHERE email = 'rushdan.ibnantiku@gmail.com'
 );

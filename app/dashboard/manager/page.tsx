@@ -125,7 +125,7 @@ export default async function ManagerDashboard() {
             <CardTitle className="text-sm font-medium">Total Value</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalValue.toFixed(2)}</div>
+            <div className="text-2xl font-bold">₵{totalValue.toFixed(2)}</div>
           </CardContent>
         </Card>
       </div>

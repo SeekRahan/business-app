@@ -133,7 +133,7 @@ export function InventoryManager({ inventory }: { inventory: any[] }) {
                     <h3 className="font-bold text-lg">{item.name}</h3>
                     <p className="text-sm text-muted-foreground">SKU: {item.sku}</p>
                     <div className="mt-2 space-x-4 text-sm">
-                      <span>Price: ${item.price}</span>
+                      <span>Price: ₵{item.price}</span>
                       <span>Qty: {item.quantity}</span>
                     </div>
                   </div>

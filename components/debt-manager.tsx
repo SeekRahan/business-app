@@ -234,7 +234,7 @@ export function DebtManager() {
                                     setPaymentDialogOpen(true)
                                 }}
                             >
-                                Pay Total Debt (${totalDebt.toFixed(2)})
+                                Pay Total Debt (₵{totalDebt.toFixed(2)})
                             </Button>
                         )}
                     </CardHeader>
@@ -264,7 +264,7 @@ export function DebtManager() {
                                             <TableCell>{new Date(debt.created_at).toLocaleDateString()}</TableCell>
                                             <TableCell>{debt.inventory?.name}</TableCell>
                                             <TableCell className="text-red-500 font-bold">
-                                                ${(debt.total_price - (debt.amount_paid || 0)).toFixed(2)}
+                                                ₵{(debt.total_price - (debt.amount_paid || 0)).toFixed(2)}
                                             </TableCell>
                                             <TableCell className="flex gap-2 items-center">
                                                 <Button 
@@ -331,7 +331,7 @@ export function DebtManager() {
                                             <TableCell>{new Date(payment.created_at).toLocaleDateString()} {new Date(payment.created_at).toLocaleTimeString()}</TableCell>
                                             <TableCell>{payment.sales?.inventory?.name || "Unknown Item"}</TableCell>
                                             <TableCell className="text-green-600 font-bold">
-                                                ${payment.amount.toFixed(2)}
+                                                ₵{payment.amount.toFixed(2)}
                                             </TableCell>
                                         </TableRow>
                                     )))}

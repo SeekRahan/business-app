@@ -206,7 +206,7 @@ export function RecordSaleButton({ product }: { product: Product }) {
                     )}
 
                     <div className="text-sm text-muted-foreground text-right">
-                        Total: ${(quantity * product.price).toFixed(2)}
+                        Total: ₵{(quantity * product.price).toFixed(2)}
                     </div>
                 </div>
                 <DialogFooter>

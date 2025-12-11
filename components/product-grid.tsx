@@ -35,7 +35,7 @@ export function ProductGrid({ inventory }: { inventory: any[] }) {
             <CardContent>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm text-muted-foreground">SKU: {item.sku}</span>
-                <span className="font-bold">${item.price}</span>
+                <span className="font-bold">₵{item.price}</span>
               </div>
               <div className="text-sm mb-4">
                 Available: <span className={item.quantity < 10 ? "text-red-500 font-bold" : ""}>{item.quantity}</span>

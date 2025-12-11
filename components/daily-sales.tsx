@@ -144,7 +144,7 @@ export function DailySales({ userId }: DailySalesProps) {
                 />
             </div>
             <span className="text-2xl font-bold text-green-600">
-                ${totalSales.toFixed(2)} <span className="text-sm font-normal text-muted-foreground">collected</span>
+                ₵{totalSales.toFixed(2)} <span className="text-sm font-normal text-muted-foreground">collected</span>
             </span>
         </CardTitle>
       </CardHeader>
@@ -185,9 +185,9 @@ export function DailySales({ userId }: DailySalesProps) {
                     <div className="text-xs text-muted-foreground">{sale.inventory?.sku}</div>
                 </TableCell>
                 <TableCell>{sale.quantity}</TableCell>
-                <TableCell>${sale.total_price.toFixed(2)}</TableCell>
+                <TableCell>₵{sale.total_price.toFixed(2)}</TableCell>
                 <TableCell className={sale.amount_paid < sale.total_price ? "text-red-500 font-bold" : "text-green-600"}>
-                    ${sale.amount_paid?.toFixed(2)}
+                    ₵{sale.amount_paid?.toFixed(2)}
                 </TableCell>
                 {!userId && (
                     <TableCell>
