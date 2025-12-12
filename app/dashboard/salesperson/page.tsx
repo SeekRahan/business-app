@@ -56,7 +56,7 @@ export default async function SalespersonDashboard() {
       <ProductGrid inventory={inventory || []} />
 
       <div className="mt-8">
-        <DailySales userId={user.id} />
+        <DailySales />
       </div>
     </div>
   );

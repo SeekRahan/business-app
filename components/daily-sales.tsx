@@ -42,6 +42,7 @@ export function DailySales({ userId }: DailySalesProps) {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [salespersonMap, setSalespersonMap] = useState<Record<string, string>>({});
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [isManager, setIsManager] = useState(false);
 
   const supabase = createClient();
 
@@ -49,6 +50,12 @@ export function DailySales({ userId }: DailySalesProps) {
     const fetchUser = async () => {
         const { data: { user } } = await supabase.auth.getUser();
         setCurrentUserId(user?.id || null);
+        
+        if (user) {
+            const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+            // Treat 'manager' or null (developer) as manager
+            setIsManager(profile?.role === 'manager' || !profile?.role);
+        }
     };
     fetchUser();
   }, []);
@@ -97,16 +104,31 @@ export function DailySales({ userId }: DailySalesProps) {
             if (userIds.length > 0) {
                 const { data: profiles } = await supabase
                 .from("profiles")
-                .select("id, full_name")
+                .select("id, full_name, role")
                 .in("id", userIds);
                 
+                const map: Record<string, string> = {};
+                
                 if (profiles) {
-                    const map: Record<string, string> = {};
                     profiles.forEach((p: any) => {
-                        map[p.id] = p.full_name || "Unknown";
+                        const isManager = p.role === 'manager' || !p.role;
+                        let displayName = p.full_name || (isManager ? "Manager" : "Unknown");
+                        if (isManager && p.full_name) {
+                            displayName = `${p.full_name} (Manager)`;
+                        }
+                        map[p.id] = displayName;
                     });
-                    setSalespersonMap(map);
                 }
+
+                // Fill in missing profiles as "Manager" (likely the admin account)
+                userIds.forEach((id: unknown) => {
+                    const userIdStr = id as string;
+                    if (!map[userIdStr]) {
+                        map[userIdStr] = "Manager";
+                    }
+                });
+
+                setSalespersonMap(map);
             }
         }
       }
@@ -157,20 +179,20 @@ export function DailySales({ userId }: DailySalesProps) {
               <TableHead>Quantity</TableHead>
               <TableHead>Total</TableHead>
               <TableHead>Paid</TableHead>
-              {!userId && <TableHead>Salesperson</TableHead>}
-              {!userId && <TableHead>Actions</TableHead>}
+              <TableHead>Salesperson</TableHead>
+              {isManager && <TableHead>Actions</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
                 <TableRow>
-                    <TableCell colSpan={userId ? 5 : 7} className="text-center py-8">
+                    <TableCell colSpan={isManager ? 7 : 6} className="text-center py-8">
                         Loading sales data...
                     </TableCell>
                 </TableRow>
             ) : sales.length === 0 ? (
                 <TableRow>
-                    <TableCell colSpan={userId ? 5 : 7} className="text-center text-muted-foreground py-8">
+                    <TableCell colSpan={isManager ? 7 : 6} className="text-center text-muted-foreground py-8">
                         No sales recorded for this date.
                     </TableCell>
                 </TableRow>
@@ -189,14 +211,12 @@ export function DailySales({ userId }: DailySalesProps) {
                 <TableCell className={sale.amount_paid < sale.total_price ? "text-red-500 font-bold" : "text-green-600"}>
                     ₵{sale.amount_paid?.toFixed(2)}
                 </TableCell>
-                {!userId && (
-                    <TableCell>
-                        {sale.salesperson_id === currentUserId 
-                            ? "You (Manager)" 
-                            : (salespersonMap[sale.salesperson_id] || "Unknown")}
-                    </TableCell>
-                )}
-                {!userId && (
+                <TableCell>
+                    {sale.salesperson_id === currentUserId 
+                        ? "You" 
+                        : (salespersonMap[sale.salesperson_id] || "Unknown")}
+                </TableCell>
+                {isManager && (
                     <TableCell>
                         <SaleActions saleId={sale.id} />
                     </TableCell>
